@@ -11,9 +11,9 @@ main{
     background-color: var(--sfondo);
 }
 /******************** debug ***********************************/
-/* .bomb{
+.bomb{
     background-color: yellow;
-} */
+}
 
 /******************** classi del gioco ***********************************/
 

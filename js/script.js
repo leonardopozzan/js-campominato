@@ -18,6 +18,8 @@ function play(){
     //prendo e pulisco il container del gioco
     container.innerHTML = '';
     const difficulty = document.querySelector('#difficulty').value;
+    const result = document.querySelector('.result');
+
 
     //scelgo il numero di celle 
     let numCell;
@@ -61,7 +63,6 @@ function play(){
     //funzione che crea le celle
     function createCell(numb, grid)
     {
-        const result = document.querySelector('.result');
 
         //creo la cella con le classi e gli stili in funzione della difficoltà
         const cell = addElementClassHTML('div', `square ${numb}`, grid);
@@ -75,14 +76,18 @@ function play(){
         //distinguo se la cella che vado a creare è o non è una bomba
         if(listOfBombs.includes(numb)){
             cell.classList.add('bomb');
-        }else{
-            cell.classList.add('clickable');
         }
 
-        cell.addEventListener('click', a = function handleClick()
-        {
-            if (listOfBombs.includes(numb)){
-                gameOver(numb,count,result);
+        cell.addEventListener('click', handleClick);
+    }
+
+    function handleClick()
+        {   
+            console.log(this)
+            console.log(this.classList)
+
+            if (listOfBombs.includes(parseInt(this.classList[1]))){
+                gameOver(0);
             }else{
                 //incremento il contatore dei click
                 count++;
@@ -93,44 +98,28 @@ function play(){
                 this.removeEventListener('click' , handleClick)
                 //condizione di vittoria
                 if (count == (numCell-COUNT_BOMBS)){
-                    gameOver(numb,count,result);
+                    gameOver(1);
                 }
             }
-        })
-    }
-
-    function gameOver(numb,count,result)
+        }
+    function gameOver(vinto)
     {   
-        console.log('game over')
         //prendo e pulisco il campo dei risultati
         result.innerHTML = ''
-        //al click aggiungo ad ogni elemento bomba la classe che colora di rosso il background
+        //aggiungo ad ogni elemento bomba la classe che colora di rosso al background
         const arraySquares = document.querySelectorAll('.square');
         for (let i = 0; i < arraySquares.length; i++){
             if(arraySquares[i].classList.contains('bomb')){
-                // console.log('esplodi bomba')
                 arraySquares[i].classList.add('bomb-exploded');
             }
             arraySquares[i].removeEventListener('click', handleClick)
         }
 
-        if (listOfBombs.includes(numb)){
-            
-            //inoltre rendo il colore delle altre celle immutabile in modo che l'utente non possa più giocare
-            //selezionando tutte le celle non ancora cliccate
-            // const arrayNotBombs = document.querySelectorAll('.clickable');
-            // const arrayNotBombs = document.querySelectorAll('.square');
-
-            // for (let i = 0; i < arrayNotBombs.length; i++){
-            //     arrayNotBombs[i].classList.add('unclickable');
-            //     // console.log(1)
-            //     // arrayNotBombs[i].removeEventListener('click' , bomba);
-            // }
+        if (!vinto){
             result.innerHTML = `Tentativi: ${count} Hai Perso!`
         }
         //condizione di vittoria
-        if (count == (numCell-COUNT_BOMBS)){
-            
+        if (vinto){
             result.innerHTML = `Tentativi: ${count} Hai Vinto!`
         }
     }
