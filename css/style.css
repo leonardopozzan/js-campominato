@@ -18,6 +18,7 @@ main{
     background-color: red;
 } */
 
+
 /******************** classi del gioco ***********************************/
 
 .the-game{
@@ -41,19 +42,26 @@ main{
     align-items: center;
     display: inline-block;
 }
-.checked{
-    background-image: url('../img/rose.png');
-    background-size: cover;
-    background-color: orange;
-}
 .show{
-    background-image: url('../img/rose.png');
-    background-size: cover;
+    background-image: url('../img/xmark-solid.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: grey;
+}
+.checked{
+    background-image: url('../img/xmark-solid.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: white;
 }
 .bomb-exploded{
-    background-color: yellow;
-    background-image: url('../img/bomb.png');
-    background-size: cover;
+    background-color: rgb(240, 240, 13);
+    background-image: url('../img/circle-radiation-solid.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 .result{
     height: 50px;

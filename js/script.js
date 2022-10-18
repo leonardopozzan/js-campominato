@@ -34,9 +34,6 @@ function play(){
         case 'crazy':
             numCell = 49
             break;
-        case 'impossible':
-            numCell = 25
-            break;
     }
 
     //genero la lista delle posizioni delle bombe
@@ -50,6 +47,7 @@ function play(){
     }
     //contatore dei click dell'utente
     let count = 0;
+    let privateCounter = 0;
 
     drawGrid()
 
@@ -78,7 +76,7 @@ function play(){
 
         cell.addEventListener('click', handleClick);
     }
-
+    const row = Math.sqrt(numCell);
     function handleClick()
         {   
             if (listOfBombs.includes(parseInt(this.classList[1]))){
@@ -86,13 +84,53 @@ function play(){
             }else{
                 //incremento il contatore dei click
                 count++;
+                privateCounter++;
                 result.innerHTML = `Tentativi: ${count}`
     
                 //al click rendo la cella cliccata e le rimuovo la classe clickable
                 this.classList.add('checked');
                 this.removeEventListener('click' , handleClick)
+
+                const arraySquares = document.querySelectorAll('.square');
+                const currentPosition = parseInt(this.classList[1]);
+                let arrayPosition = [];
+                let exception1 = [];
+                let exception2 = [];
+                
+                {if(numCell == 100){
+                    exception1 = [1,11,21,31,41,51,61,71,81,91];
+                    exception2 = [10,20,30,40,50,60,70,80,90,100];
+                }else if(numCell == 81){
+                    exception1 = [1,10,19,28,37,46,55,64,73];
+                    exception2 = [9,18,27,36,45,54,63,72,81];
+                }else{
+                    exception1 = [1,8,15,22,29,36,43];
+                    exception2 = [7,14,21,28,35,42,49];
+                }
+                }
+                if(exception1.includes(currentPosition)){
+                    arrayPosition = [currentPosition-row,currentPosition-row+1,currentPosition+1,currentPosition+row,currentPosition+row+1];
+                }else if(exception2.includes(currentPosition)){
+                    arrayPosition = [currentPosition-row-1,currentPosition-row,currentPosition-1,currentPosition+row-1,currentPosition+row];
+                }else {
+                    arrayPosition = [currentPosition-row-1,currentPosition-row,currentPosition-row+1,currentPosition-1,currentPosition+1,currentPosition+row-1,currentPosition+row,currentPosition+row+1];
+                }
+                // console.log(arrayPosition);
+                for(let i = 0; i < arrayPosition.length; i++){
+                    if(1 <= arrayPosition[i] && arrayPosition[i] <= numCell){
+                        if(!listOfBombs.includes(arrayPosition[i])){
+                            if(!arraySquares[arrayPosition[i]-1].classList.contains('show')){
+                                privateCounter++;
+                                arraySquares[arrayPosition[i]-1].classList.add('show');
+                                arraySquares[arrayPosition[i]-1].removeEventListener('click', handleClick);
+                                console.log(privateCounter)
+                            }
+                            
+                        }
+                    }
+                }
                 //condizione di vittoria
-                if (count == (numCell-COUNT_BOMBS)){
+                if (privateCounter == (numCell-COUNT_BOMBS)){
                     gameOver(1);
                 }
             }
@@ -107,10 +145,10 @@ function play(){
             if(arraySquares[i].classList.contains('bomb')){
                 arraySquares[i].classList.add('bomb-exploded');
             }else{
-                arraySquares[i].classList.add('show')
+                arraySquares[i].classList.add('show');
             }
             //tolgo gli eventi ad ogni quadrato
-            arraySquares[i].removeEventListener('click', handleClick)
+            arraySquares[i].removeEventListener('click', handleClick);
         }
 
         //printo il messaggio di vittoria o sconfitta
