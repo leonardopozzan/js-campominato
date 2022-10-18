@@ -13,10 +13,7 @@ body{
 main{
     background-color: var(--sfondo);
 }
-/******************** debug ***********************************/
-/* .bomb{
-    background-color: red;
-} */
+
 
 
 /******************** classi del gioco ***********************************/
@@ -36,27 +33,34 @@ main{
     justify-content: flex-start;
 }
 .square{
-    border: 2px solid black;
+    border: 5px outset lightgrey;
+    background-color: grey;
     display: flex;
     justify-content: center;
     align-items: center;
-    display: inline-block;
+    font-weight: bold;
+    font-size: 18px;
+    color: grey;
 }
+/******************** debug ***********************************/
+/* .bomb{
+    background-color: red;
+} */
+/******************** debug ***********************************/
+
 .show{
-    background-image: url('../img/xmark-solid.svg');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color: grey;
+    background-color: lightgrey;
+    color: blue;
+    border: 2px solid black;
 }
 .checked{
-    background-image: url('../img/xmark-solid.svg');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
     background-color: white;
+    color: blue;
+    border: 2px solid black;
+
 }
 .bomb-exploded{
+    border: 2px solid black;
     background-color: rgb(240, 240, 13);
     background-image: url('../img/circle-radiation-solid.svg');
     background-size: contain;
@@ -77,4 +81,7 @@ main{
     background-color: white;
     padding: 0.5rem 2rem;
     border-radius: 25px;
+}
+.red{
+    background-color: red;
 }

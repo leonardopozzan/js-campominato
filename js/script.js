@@ -48,8 +48,11 @@ function play(){
     //contatore dei click dell'utente
     let count = 0;
     let privateCounter = 0;
+    //conto delle righe
+    const row = Math.sqrt(numCell);
 
-    drawGrid()
+    drawGrid();
+    placeCounter();
 
     //funzione che crea la griglia delle celle
     function drawGrid(){
@@ -58,7 +61,6 @@ function play(){
             createCell(i,grid);
         }
     }
-    // var a;
     //funzione che crea le celle
     function createCell(numb, grid)
     {
@@ -72,11 +74,13 @@ function play(){
         //distinguo se la cella che vado a creare è o non è una bomba
         if(listOfBombs.includes(numb)){
             cell.classList.add('bomb');
+        }else{
+            cell.innerHTML = '0';
         }
 
         cell.addEventListener('click', handleClick);
     }
-    const row = Math.sqrt(numCell);
+    
     function handleClick()
         {   
             if (listOfBombs.includes(parseInt(this.classList[1]))){
@@ -97,16 +101,17 @@ function play(){
                 let exception1 = [];
                 let exception2 = [];
                 
-                {if(numCell == 100){
+                {   
+                    if(numCell == 100){
                     exception1 = [1,11,21,31,41,51,61,71,81,91];
                     exception2 = [10,20,30,40,50,60,70,80,90,100];
-                }else if(numCell == 81){
+                    }else if(numCell == 81){
                     exception1 = [1,10,19,28,37,46,55,64,73];
                     exception2 = [9,18,27,36,45,54,63,72,81];
-                }else{
+                    }else{
                     exception1 = [1,8,15,22,29,36,43];
                     exception2 = [7,14,21,28,35,42,49];
-                }
+                    }
                 }
                 if(exception1.includes(currentPosition)){
                     arrayPosition = [currentPosition-row,currentPosition-row+1,currentPosition+1,currentPosition+row,currentPosition+row+1];
@@ -123,7 +128,6 @@ function play(){
                                 privateCounter++;
                                 arraySquares[arrayPosition[i]-1].classList.add('show');
                                 arraySquares[arrayPosition[i]-1].removeEventListener('click', handleClick);
-                                console.log(privateCounter)
                             }
                             
                         }
@@ -158,5 +162,46 @@ function play(){
             result.innerHTML = `Tentativi: ${count} Hai Perso!`
         }
     }
-    
+
+    function placeCounter(){
+        const arrayBombs = document.querySelectorAll('.bomb');
+        const arraySquares = document.querySelectorAll('.square');
+
+        for(let j = 0; j < arrayBombs.length; j++){
+            const currentPosition = parseInt(arrayBombs[j].classList[1]);
+            let arrayPosition = [];
+            let exception1 = [];
+            let exception2 = [];
+            
+            {   
+                if(numCell == 100){
+                exception1 = [1,11,21,31,41,51,61,71,81,91];
+                exception2 = [10,20,30,40,50,60,70,80,90,100];
+                }else if(numCell == 81){
+                exception1 = [1,10,19,28,37,46,55,64,73];
+                exception2 = [9,18,27,36,45,54,63,72,81];
+                }else{
+                exception1 = [1,8,15,22,29,36,43];
+                exception2 = [7,14,21,28,35,42,49];
+                }
+            }
+            if(exception1.includes(currentPosition)){
+                arrayPosition = [currentPosition-row,currentPosition-row+1,currentPosition+1,currentPosition+row,currentPosition+row+1];
+            }else if(exception2.includes(currentPosition)){
+                arrayPosition = [currentPosition-row-1,currentPosition-row,currentPosition-1,currentPosition+row-1,currentPosition+row];
+            }else {
+                arrayPosition = [currentPosition-row-1,currentPosition-row,currentPosition-row+1,currentPosition-1,currentPosition+1,currentPosition+row-1,currentPosition+row,currentPosition+row+1];
+            }
+            // console.log(arrayPosition);
+            for(let i = 0; i < arrayPosition.length; i++){
+                if(!listOfBombs.includes(arrayPosition[i])){
+                    if(1 <= arrayPosition[i] && arrayPosition[i] <= numCell){
+                        let testo = parseInt(arraySquares[arrayPosition[i]-1].textContent);
+                        testo++;
+                        arraySquares[arrayPosition[i]-1].textContent = `${testo}`
+                    }
+                }
+            }
+        }
+    }
 }
