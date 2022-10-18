@@ -59,7 +59,7 @@ function play(){
             createCell(i,grid);
         }
     }
-
+    var a;
     //funzione che crea le celle
     function createCell(numb, grid)
     {
@@ -78,30 +78,43 @@ function play(){
             cell.classList.add('bomb');
         }
 
-        cell.addEventListener('click', handleClick);
+        cell.addEventListener('click', a = function handleClick(){
+            if (listOfBombs.includes(parseInt(this.classList[1]))){
+                    gameOver(0);
+                }else{
+                    //incremento il contatore dei click
+                    count++;
+                    result.innerHTML = `Tentativi: ${count}`
+                    
+                    //al click rendo la cella cliccata e le rimuovo la classe clickable
+                    this.classList.add('checked');
+                    this.removeEventListener('click' , handleClick)
+                    //condizione di vittoria
+                    if (count == (numCell-COUNT_BOMBS)){
+                        gameOver(1);
+                    }
+            }
+        });
     }
 
-    function handleClick()
-        {   
-            console.log(this)
-            console.log(this.classList)
-
-            if (listOfBombs.includes(parseInt(this.classList[1]))){
-                gameOver(0);
-            }else{
-                //incremento il contatore dei click
-                count++;
-                result.innerHTML = `Tentativi: ${count}`
+    // function handleClick()
+    //     {   
+    //         if (listOfBombs.includes(parseInt(this.classList[1]))){
+    //             gameOver(0);
+    //         }else{
+    //             //incremento il contatore dei click
+    //             count++;
+    //             result.innerHTML = `Tentativi: ${count}`
                 
-                //al click rendo la cella cliccata e le rimuovo la classe clickable
-                this.classList.add('checked');
-                this.removeEventListener('click' , handleClick)
-                //condizione di vittoria
-                if (count == (numCell-COUNT_BOMBS)){
-                    gameOver(1);
-                }
-            }
-        }
+    //             //al click rendo la cella cliccata e le rimuovo la classe clickable
+    //             this.classList.add('checked');
+    //             this.removeEventListener('click' , handleClick)
+    //             //condizione di vittoria
+    //             if (count == (numCell-COUNT_BOMBS)){
+    //                 gameOver(1);
+    //             }
+    //         }
+    //     }
     function gameOver(vinto)
     {   
         //prendo e pulisco il campo dei risultati
@@ -112,7 +125,7 @@ function play(){
             if(arraySquares[i].classList.contains('bomb')){
                 arraySquares[i].classList.add('bomb-exploded');
             }
-            arraySquares[i].removeEventListener('click', handleClick)
+            arraySquares[i].removeEventListener('click', a)
         }
 
         if (!vinto){
