@@ -5,14 +5,17 @@
     box-sizing: border-box;
 }
 :root{
-    --sfondo: #7FFFD4;
+    --sfondo: white;
+}
+body{
+    background-color: black;
 }
 main{
     background-color: var(--sfondo);
 }
 /******************** debug ***********************************/
 .bomb{
-    background-color: yellow;
+    background-color: red;
 }
 
 /******************** classi del gioco ***********************************/
@@ -39,14 +42,31 @@ main{
     display: inline-block;
 }
 .checked{
-    background-color: lightblue;
+    background-image: url('../img/rose.png');
+    background-size: cover;
+    background-color: orange;
 }
-.unclickable{
-    background-color: transparent!important;
+.show{
+    background-image: url('../img/rose.png');
+    background-size: cover;
 }
 .bomb-exploded{
-    background-color: red;
+    background-color: yellow;
+    background-image: url('../img/bomb.png');
+    background-size: cover;
 }
 .result{
     height: 50px;
+    font-weight: bold;
+    font-size: 2rem;
+}
+#difficulty{
+    padding: 0.5rem 2rem;
+    border-radius: 15px;
+    background-color: white;
+}
+#btn{
+    background-color: white;
+    padding: 0.5rem 2rem;
+    border-radius: 25px;
 }

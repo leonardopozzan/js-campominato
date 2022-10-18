@@ -19,6 +19,7 @@ function play(){
     container.innerHTML = '';
     const difficulty = document.querySelector('#difficulty').value;
     const result = document.querySelector('.result');
+    result.innerHTML = '';
 
 
     //scelgo il numero di celle 
@@ -59,7 +60,7 @@ function play(){
             createCell(i,grid);
         }
     }
-    var a;
+    // var a;
     //funzione che crea le celle
     function createCell(numb, grid)
     {
@@ -70,51 +71,32 @@ function play(){
         cell.style.height = `calc(100% / ${Math.sqrt(numCell)})`;
         cell.style.cursor = 'pointer';
 
-        //inserisco una variabile che conta i click
-        count = 0;
-
         //distinguo se la cella che vado a creare è o non è una bomba
         if(listOfBombs.includes(numb)){
             cell.classList.add('bomb');
         }
 
-        cell.addEventListener('click', a = function handleClick(){
-            if (listOfBombs.includes(parseInt(this.classList[1]))){
-                    gameOver(0);
-                }else{
-                    //incremento il contatore dei click
-                    count++;
-                    result.innerHTML = `Tentativi: ${count}`
-                    
-                    //al click rendo la cella cliccata e le rimuovo la classe clickable
-                    this.classList.add('checked');
-                    this.removeEventListener('click' , handleClick)
-                    //condizione di vittoria
-                    if (count == (numCell-COUNT_BOMBS)){
-                        gameOver(1);
-                    }
-            }
-        });
+        cell.addEventListener('click', handleClick);
     }
 
-    // function handleClick()
-    //     {   
-    //         if (listOfBombs.includes(parseInt(this.classList[1]))){
-    //             gameOver(0);
-    //         }else{
-    //             //incremento il contatore dei click
-    //             count++;
-    //             result.innerHTML = `Tentativi: ${count}`
-                
-    //             //al click rendo la cella cliccata e le rimuovo la classe clickable
-    //             this.classList.add('checked');
-    //             this.removeEventListener('click' , handleClick)
-    //             //condizione di vittoria
-    //             if (count == (numCell-COUNT_BOMBS)){
-    //                 gameOver(1);
-    //             }
-    //         }
-    //     }
+    function handleClick()
+        {   
+            if (listOfBombs.includes(parseInt(this.classList[1]))){
+                gameOver(0);
+            }else{
+                //incremento il contatore dei click
+                count++;
+                result.innerHTML = `Tentativi: ${count}`
+    
+                //al click rendo la cella cliccata e le rimuovo la classe clickable
+                this.classList.add('checked');
+                this.removeEventListener('click' , handleClick)
+                //condizione di vittoria
+                if (count == (numCell-COUNT_BOMBS)){
+                    gameOver(1);
+                }
+            }
+        }
     function gameOver(vinto)
     {   
         //prendo e pulisco il campo dei risultati
@@ -124,16 +106,18 @@ function play(){
         for (let i = 0; i < arraySquares.length; i++){
             if(arraySquares[i].classList.contains('bomb')){
                 arraySquares[i].classList.add('bomb-exploded');
+            }else{
+                arraySquares[i].classList.add('show')
             }
-            arraySquares[i].removeEventListener('click', a)
+            //tolgo gli eventi ad ogni quadrato
+            arraySquares[i].removeEventListener('click', handleClick)
         }
 
-        if (!vinto){
-            result.innerHTML = `Tentativi: ${count} Hai Perso!`
-        }
-        //condizione di vittoria
+        //printo il messaggio di vittoria o sconfitta
         if (vinto){
             result.innerHTML = `Tentativi: ${count} Hai Vinto!`
+        }else{
+            result.innerHTML = `Tentativi: ${count} Hai Perso!`
         }
     }
     
