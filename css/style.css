@@ -7,14 +7,12 @@
 :root{
     --sfondo: white;
 }
-body{
-    background-color: black;
-}
 main{
     background-color: var(--sfondo);
 }
-
-
+header{
+    background-color: rgb(5, 71, 0);
+}
 
 /******************** classi del gioco ***********************************/
 

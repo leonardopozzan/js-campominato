@@ -53,6 +53,7 @@ function play(){
 
     drawGrid();
     placeCounter();
+    removeText();
 
     //funzione che crea la griglia delle celle
     function drawGrid(){
@@ -201,6 +202,16 @@ function play(){
                         arraySquares[arrayPosition[i]-1].textContent = `${testo}`
                     }
                 }
+            }
+        }
+    }
+
+    function removeText(){
+        const arraySquares = document.querySelectorAll('.square');
+        for(let i = 0; i < arraySquares.length; i++){
+            const testo = parseInt(arraySquares[i].textContent);
+            if (testo == 0){
+                arraySquares[i].textContent = '';
             }
         }
     }
