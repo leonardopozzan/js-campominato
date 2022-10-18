@@ -1,0 +1,52 @@
+/******************** Utility ***********************************/
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+:root{
+    --sfondo: #7FFFD4;
+}
+main{
+    background-color: var(--sfondo);
+}
+/******************** debug ***********************************/
+/* .bomb{
+    background-color: yellow;
+} */
+
+/******************** classi del gioco ***********************************/
+
+.the-game{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 2rem;
+    height: 550px;
+}
+.grid{
+    width: 500px;
+    height: 500px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+.square{
+    border: 2px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: inline-block;
+}
+.checked{
+    background-color: lightblue;
+}
+.unclickable{
+    background-color: transparent!important;
+}
+.bomb-exploded{
+    background-color: red;
+}
+.result{
+    height: 50px;
+}
