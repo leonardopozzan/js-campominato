@@ -45,13 +45,14 @@ function play(){
             listOfBombs.push(random);
         }
     }
-    //contatore dei click dell'utente
-    // let count = 0;
+    console.log(listOfBombs)
+    //contatore dei click
     let privateCounter = 0;
     //conto delle righe
     const columns = Math.sqrt(numCell);
 
     drawGrid(numCell);
+    const arraySquares = document.querySelectorAll('.square');
     placeCounter();
 
     //funzione che crea la griglia delle celle
@@ -190,8 +191,6 @@ function play(){
                 //         }
                 //     }
                 // }
-                
-                
             }
         }
     function gameOver(vinto)
@@ -199,7 +198,6 @@ function play(){
         //prendo e pulisco il campo dei risultati
         result.innerHTML = ''
         //aggiungo ad ogni elemento bomba la classe che colora di rosso al background
-        const arraySquares = document.querySelectorAll('.square');
         for (let i = 0; i < arraySquares.length; i++){
             if(arraySquares[i].classList.contains('bomb')){
                 arraySquares[i].classList.add('bomb-exploded');
@@ -217,47 +215,141 @@ function play(){
     }
 
     function placeCounter(){
-        const arrayBombs = document.querySelectorAll('.bomb');
-        const arraySquares = document.querySelectorAll('.square');
 
-        for(let j = 0; j < arrayBombs.length; j++){
-            const currentPosition = parseInt(arrayBombs[j].id);
-            let arrayPosition = [];
-            let exception1 = [];
-            let exception2 = [];
+        for(let j = 0; j < listOfBombs.length; j++){
+            const currentPosition = listOfBombs[j];
+
+            const isRight = (currentPosition % columns === 0);
+            const isLeft = (currentPosition % columns === 1);
+            //in base alla posizione della cella imposto le condizioni da rispettare per andare a controllare una cella vicina
             
-            {   
-                if(numCell == 100){
-                exception1 = [1,11,21,31,41,51,61,71,81,91];
-                exception2 = [10,20,30,40,50,60,70,80,90,100];
-                }else if(numCell == 81){
-                exception1 = [1,10,19,28,37,46,55,64,73];
-                exception2 = [9,18,27,36,45,54,63,72,81];
-                }else{
-                exception1 = [1,8,15,22,29,36,43];
-                exception2 = [7,14,21,28,35,42,49];
-                }
-            }
-            if(exception1.includes(currentPosition)){
-                arrayPosition = [currentPosition-columns,currentPosition-columns+1,currentPosition+1,currentPosition+columns,currentPosition+columns+1];
-            }else if(exception2.includes(currentPosition)){
-                arrayPosition = [currentPosition-columns-1,currentPosition-columns,currentPosition-1,currentPosition+columns-1,currentPosition+columns];
-            }else {
-                arrayPosition = [currentPosition-columns-1,currentPosition-columns,currentPosition-columns+1,currentPosition-1,currentPosition+1,currentPosition+columns-1,currentPosition+columns,currentPosition+columns+1];
-            }
-            // console.log(arrayPosition);
-            for(let i = 0; i < arrayPosition.length; i++){
-                if(!listOfBombs.includes(arrayPosition[i])){
-                    if(1 <= arrayPosition[i] && arrayPosition[i] <= numCell){
-                        let testo = parseInt(arraySquares[arrayPosition[i]-1].textContent);
-                        if(isNaN(testo)){
-                            testo = 0;
-                        }
-                        testo++;
-                        arraySquares[arrayPosition[i]-1].textContent = `${testo}`
+            if(!isLeft && currentPosition > columns) {
+                const newPosition = currentPosition - columns -1;
+                if(!listOfBombs.includes(newPosition)){
+                    let counterBombs = parseInt(arraySquares[newPosition - 1].textContent);
+                    if(isNaN(counterBombs)){
+                        counterBombs = 0;
                     }
+                    counterBombs++;
+                    arraySquares[newPosition - 1].textContent = counterBombs;
                 }
             }
+            if(currentPosition > columns){
+                const newPosition = currentPosition - columns;
+                if(!listOfBombs.includes(newPosition)){
+                    let counterBombs = parseInt(arraySquares[newPosition - 1].textContent);
+                    if(isNaN(counterBombs)){
+                        counterBombs = 0;
+                    }
+                    counterBombs++;
+                    arraySquares[newPosition - 1].textContent = counterBombs;
+                }
+            }
+            if(!isRight && currentPosition > columns){
+                const newPosition = currentPosition - columns + 1;
+                if(!listOfBombs.includes(newPosition)){
+                    let counterBombs = parseInt(arraySquares[newPosition - 1].textContent);
+                    if(isNaN(counterBombs)){
+                        counterBombs = 0;
+                    }
+                    counterBombs++;
+                    arraySquares[newPosition - 1].textContent = counterBombs;
+                };
+            }
+            if(!isLeft && currentPosition > 0){
+                const newPosition = currentPosition - 1;
+                if(!listOfBombs.includes(newPosition)){
+                    let counterBombs = parseInt(arraySquares[newPosition - 1].textContent);
+                    if(isNaN(counterBombs)){
+                        counterBombs = 0;
+                    }
+                    counterBombs++;
+                    arraySquares[newPosition - 1].textContent = counterBombs;
+                }
+            }
+            if(!isRight && currentPosition > 0){
+                const newPosition = currentPosition + 1;
+                if(!listOfBombs.includes(newPosition)){
+                    let counterBombs = parseInt(arraySquares[newPosition - 1].textContent);
+                    if(isNaN(counterBombs)){
+                        counterBombs = 0;
+                    }
+                    counterBombs++;
+                    arraySquares[newPosition - 1].textContent = counterBombs;
+                }
+            }
+            if(!isLeft && currentPosition < (numCell - columns)) {
+                const newPosition = currentPosition + columns -1;
+                if(!listOfBombs.includes(newPosition)){
+                    let counterBombs = parseInt(arraySquares[newPosition - 1].textContent);
+                    if(isNaN(counterBombs)){
+                        counterBombs = 0;
+                    }
+                    counterBombs++;
+                    arraySquares[newPosition - 1].textContent = counterBombs;
+                }
+            }
+            if(currentPosition < (numCell - columns)){
+                const newPosition = currentPosition + columns;
+                if(!listOfBombs.includes(newPosition)){
+                    let counterBombs = parseInt(arraySquares[newPosition - 1].textContent);
+                    if(isNaN(counterBombs)){
+                        counterBombs = 0;
+                    }
+                    counterBombs++;
+                    arraySquares[newPosition - 1].textContent = counterBombs;
+                }
+            }
+            if(!isRight && currentPosition < (numCell - columns)){
+                const newPosition = currentPosition + columns + 1;
+                if(!listOfBombs.includes(newPosition)){
+                    let counterBombs = parseInt(arraySquares[newPosition - 1].textContent);
+                    if(isNaN(counterBombs)){
+                        counterBombs = 0;
+                    }
+                    counterBombs++;
+                    arraySquares[newPosition - 1].textContent = counterBombs;
+                }
+            }
+            
+
+            //esecuzione vecchia, versione 1
+            // let arrayPosition = [];
+            // let exception1 = [];
+            // let exception2 = [];
+            
+            // {   
+            //     if(numCell == 100){
+            //     exception1 = [1,11,21,31,41,51,61,71,81,91];
+            //     exception2 = [10,20,30,40,50,60,70,80,90,100];
+            //     }else if(numCell == 81){
+            //     exception1 = [1,10,19,28,37,46,55,64,73];
+            //     exception2 = [9,18,27,36,45,54,63,72,81];
+            //     }else{
+            //     exception1 = [1,8,15,22,29,36,43];
+            //     exception2 = [7,14,21,28,35,42,49];
+            //     }
+            // }
+            // if(exception1.includes(currentPosition)){
+            //     arrayPosition = [currentPosition-columns,currentPosition-columns+1,currentPosition+1,currentPosition+columns,currentPosition+columns+1];
+            // }else if(exception2.includes(currentPosition)){
+            //     arrayPosition = [currentPosition-columns-1,currentPosition-columns,currentPosition-1,currentPosition+columns-1,currentPosition+columns];
+            // }else {
+            //     arrayPosition = [currentPosition-columns-1,currentPosition-columns,currentPosition-columns+1,currentPosition-1,currentPosition+1,currentPosition+columns-1,currentPosition+columns,currentPosition+columns+1];
+            // }
+            // // console.log(arrayPosition);
+            // for(let i = 0; i < arrayPosition.length; i++){
+            //     if(!listOfBombs.includes(arrayPosition[i])){
+            //         if(1 <= arrayPosition[i] && arrayPosition[i] <= numCell){
+            //             let testo = parseInt(arraySquares[arrayPosition[i]-1].textContent);
+            //             if(isNaN(testo)){
+            //                 testo = 0;
+            //             }
+            //             testo++;
+            //             arraySquares[arrayPosition[i]-1].textContent = `${testo}`
+            //         }
+                // }
+            // }
         }
     }
     
