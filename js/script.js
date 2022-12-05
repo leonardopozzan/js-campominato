@@ -38,7 +38,7 @@ function play(){
 
     //genero la lista delle posizioni delle bombe
     let listOfBombs = [];
-    const COUNT_BOMBS = 16;
+    const COUNT_BOMBS = 8;
     while(listOfBombs.length < COUNT_BOMBS){
         const random = Math.floor(Math.random() * numCell) + 1;
         if(!listOfBombs.includes(random)){
@@ -46,17 +46,16 @@ function play(){
         }
     }
     //contatore dei click dell'utente
-    let count = 0;
+    // let count = 0;
     let privateCounter = 0;
     //conto delle righe
-    const row = Math.sqrt(numCell);
+    const columns = Math.sqrt(numCell);
 
-    drawGrid();
+    drawGrid(numCell);
     placeCounter();
-    removeText();
 
     //funzione che crea la griglia delle celle
-    function drawGrid(){
+    function drawGrid(numCell){
         const grid = addElementClassHTML('div', 'grid', container);
         for (let i = 1; i <= numCell; i++){
             createCell(i,grid);
@@ -67,77 +66,132 @@ function play(){
     {
 
         //creo la cella con le classi e gli stili in funzione della difficoltà
-        const cell = addElementClassHTML('div', `square ${numb}`, grid);
-        cell.style.width = `calc(100% / ${Math.sqrt(numCell)})`;
-        cell.style.height = `calc(100% / ${Math.sqrt(numCell)})`;
-        cell.style.cursor = 'pointer';
-
+        const cell = addElementClassHTML('div', 'square', grid);
+        cell.style.width = `calc(100% / ${columns})`;
+        cell.style.height = `calc(100% / ${columns})`;
+        cell.id = numb;
         //distinguo se la cella che vado a creare è o non è una bomba
         if(listOfBombs.includes(numb)){
             cell.classList.add('bomb');
-        }else{
-            cell.innerHTML = '0';
         }
 
-        cell.addEventListener('click', handleClick);
+        cell.addEventListener('click', function(e){
+            click(cell);
+        });
+        // cell.oncontextmenu = function(e){
+        //     e.preventDefault();
+        //     addFlag(cell);
+        // }
     }
     
-    function handleClick()
+    function click(cell)
         {   
-            if (listOfBombs.includes(parseInt(this.classList[1]))){
+            if(cell.classList.contains('checked')) return;
+            if(cell.classList.contains('show')) return;
+            const currentPosition = parseInt(cell.id);
+            if (listOfBombs.includes(currentPosition)){
                 gameOver(0);
             }else{
+                //al click rendo la cella cliccata 
+                cell.classList.add('checked');
                 //incremento il contatore dei click
-                count++;
                 privateCounter++;
-                result.innerHTML = `Tentativi: ${count}`
-    
-                //al click rendo la cella cliccata e le rimuovo la classe clickable
-                this.classList.add('checked');
-                this.removeEventListener('click' , handleClick)
-
-                const arraySquares = document.querySelectorAll('.square');
-                const currentPosition = parseInt(this.classList[1]);
-                let arrayPosition = [];
-                let exception1 = [];
-                let exception2 = [];
-                
-                {   
-                    if(numCell == 100){
-                    exception1 = [1,11,21,31,41,51,61,71,81,91];
-                    exception2 = [10,20,30,40,50,60,70,80,90,100];
-                    }else if(numCell == 81){
-                    exception1 = [1,10,19,28,37,46,55,64,73];
-                    exception2 = [9,18,27,36,45,54,63,72,81];
-                    }else{
-                    exception1 = [1,8,15,22,29,36,43];
-                    exception2 = [7,14,21,28,35,42,49];
-                    }
-                }
-                if(exception1.includes(currentPosition)){
-                    arrayPosition = [currentPosition-row,currentPosition-row+1,currentPosition+1,currentPosition+row,currentPosition+row+1];
-                }else if(exception2.includes(currentPosition)){
-                    arrayPosition = [currentPosition-row-1,currentPosition-row,currentPosition-1,currentPosition+row-1,currentPosition+row];
-                }else {
-                    arrayPosition = [currentPosition-row-1,currentPosition-row,currentPosition-row+1,currentPosition-1,currentPosition+1,currentPosition+row-1,currentPosition+row,currentPosition+row+1];
-                }
-                // console.log(arrayPosition);
-                for(let i = 0; i < arrayPosition.length; i++){
-                    if(1 <= arrayPosition[i] && arrayPosition[i] <= numCell){
-                        if(!listOfBombs.includes(arrayPosition[i])){
-                            if(!arraySquares[arrayPosition[i]-1].classList.contains('show')){
-                                privateCounter++;
-                                arraySquares[arrayPosition[i]-1].classList.add('show');
-                                arraySquares[arrayPosition[i]-1].removeEventListener('click', handleClick);
-                            }
-                            
-                        }
-                    }
-                }
                 //condizione di vittoria
                 if (privateCounter == (numCell-COUNT_BOMBS)){
-                    gameOver(1);
+                    return gameOver(1);
                 }
+                closerBombsCounter = parseInt(cell.textContent);
+                //se ha una bomba vicino fermo il controllo delle celle vicine
+                if(!isNaN(closerBombsCounter)){
+                    return;
+                }
+                //se invece non ci sono bombe vicine controllo tutte le posizioni vicine
+                //valori booleani per indicare se la cella è a destra o sinistra
+                const isRight = (currentPosition % columns === 0);
+                const isLeft = (currentPosition % columns === 1);
+                //in base alla posizione della cella imposto le condizioni da rispettare per andare a controllare una cella vicina
+                setTimeout(()=>{
+                    if(!isLeft && currentPosition > columns) {
+                        const newPosition = currentPosition - columns -1;
+                        const newCell = document.getElementById(newPosition);
+                        click(newCell);
+                    }
+                    if(currentPosition > columns){
+                        const newPosition = currentPosition - columns;
+                        const newCell = document.getElementById(newPosition);
+                        click(newCell);
+                    }
+                    if(!isRight && currentPosition > columns){
+                        const newPosition = currentPosition - columns + 1;
+                        const newCell = document.getElementById(newPosition);
+                        click(newCell);
+                    }
+                    if(!isLeft && currentPosition > 0){
+                        const newPosition = currentPosition - 1;
+                        const newCell = document.getElementById(newPosition);
+                        click(newCell);
+                    }
+                    if(!isRight && currentPosition > 0){
+                        const newPosition = currentPosition + 1;
+                        const newCell = document.getElementById(newPosition);
+                        click(newCell);
+                    }
+                    if(!isLeft && currentPosition < (numCell - columns)) {
+                        const newPosition = currentPosition + columns -1;
+                        const newCell = document.getElementById(newPosition);
+                        click(newCell);
+                    }
+                    if(currentPosition < (numCell - columns)){
+                        const newPosition = currentPosition + columns;
+                        const newCell = document.getElementById(newPosition);
+                        click(newCell);
+                    }
+                    if(!isRight && currentPosition < (numCell - columns)){
+                        const newPosition = currentPosition + columns + 1;
+                        const newCell = document.getElementById(newPosition);
+                        click(newCell);
+                    }
+                },10);
+                //esecuzione vecchia, versione 1
+                // const arraySquares = document.querySelectorAll('.square');
+                // const currentPosition = parseInt(cell.id);
+                // let arrayPosition = [];
+                // let exception1 = [];
+                // let exception2 = [];
+                
+                // {   
+                //     if(numCell == 100){
+                //     exception1 = [1,11,21,31,41,51,61,71,81,91];
+                //     exception2 = [10,20,30,40,50,60,70,80,90,100];
+                //     }else if(numCell == 81){
+                //     exception1 = [1,10,19,28,37,46,55,64,73];
+                //     exception2 = [9,18,27,36,45,54,63,72,81];
+                //     }else{
+                //     exception1 = [1,8,15,22,29,36,43];
+                //     exception2 = [7,14,21,28,35,42,49];
+                //     }
+                // }
+                // if(exception1.includes(currentPosition)){
+                //     arrayPosition = [currentPosition-columns,currentPosition-columns+1,currentPosition+1,currentPosition+columns,currentPosition+columns+1];
+                // }else if(exception2.includes(currentPosition)){
+                //     arrayPosition = [currentPosition-columns-1,currentPosition-columns,currentPosition-1,currentPosition+columns-1,currentPosition+columns];
+                // }else {
+                //     arrayPosition = [currentPosition-columns-1,currentPosition-columns,currentPosition-columns+1,currentPosition-1,currentPosition+1,currentPosition+columns-1,currentPosition+columns,currentPosition+columns+1];
+                // }
+                // // console.log(arrayPosition);
+                // for(let i = 0; i < arrayPosition.length; i++){
+                //     if(1 <= arrayPosition[i] && arrayPosition[i] <= numCell){
+                //         if(!listOfBombs.includes(arrayPosition[i])){
+                //             if(!arraySquares[arrayPosition[i]-1].classList.contains('show')){
+                //                 privateCounter++;
+                //                 arraySquares[arrayPosition[i]-1].classList.add('show');
+                //                 arraySquares[arrayPosition[i]-1].removeEventListener('click', handleClick);
+                //             }
+                //         }
+                //     }
+                // }
+                
+                
             }
         }
     function gameOver(vinto)
@@ -152,15 +206,13 @@ function play(){
             }else{
                 arraySquares[i].classList.add('show');
             }
-            //tolgo gli eventi ad ogni quadrato
-            arraySquares[i].removeEventListener('click', handleClick);
         }
 
         //printo il messaggio di vittoria o sconfitta
         if (vinto){
-            result.innerHTML = `Tentativi: ${count} Hai Vinto!`
+            result.innerHTML = `Hai Vinto!`
         }else{
-            result.innerHTML = `Tentativi: ${count} Hai Perso!`
+            result.innerHTML = `Hai Perso!`
         }
     }
 
@@ -169,7 +221,7 @@ function play(){
         const arraySquares = document.querySelectorAll('.square');
 
         for(let j = 0; j < arrayBombs.length; j++){
-            const currentPosition = parseInt(arrayBombs[j].classList[1]);
+            const currentPosition = parseInt(arrayBombs[j].id);
             let arrayPosition = [];
             let exception1 = [];
             let exception2 = [];
@@ -187,17 +239,20 @@ function play(){
                 }
             }
             if(exception1.includes(currentPosition)){
-                arrayPosition = [currentPosition-row,currentPosition-row+1,currentPosition+1,currentPosition+row,currentPosition+row+1];
+                arrayPosition = [currentPosition-columns,currentPosition-columns+1,currentPosition+1,currentPosition+columns,currentPosition+columns+1];
             }else if(exception2.includes(currentPosition)){
-                arrayPosition = [currentPosition-row-1,currentPosition-row,currentPosition-1,currentPosition+row-1,currentPosition+row];
+                arrayPosition = [currentPosition-columns-1,currentPosition-columns,currentPosition-1,currentPosition+columns-1,currentPosition+columns];
             }else {
-                arrayPosition = [currentPosition-row-1,currentPosition-row,currentPosition-row+1,currentPosition-1,currentPosition+1,currentPosition+row-1,currentPosition+row,currentPosition+row+1];
+                arrayPosition = [currentPosition-columns-1,currentPosition-columns,currentPosition-columns+1,currentPosition-1,currentPosition+1,currentPosition+columns-1,currentPosition+columns,currentPosition+columns+1];
             }
             // console.log(arrayPosition);
             for(let i = 0; i < arrayPosition.length; i++){
                 if(!listOfBombs.includes(arrayPosition[i])){
                     if(1 <= arrayPosition[i] && arrayPosition[i] <= numCell){
                         let testo = parseInt(arraySquares[arrayPosition[i]-1].textContent);
+                        if(isNaN(testo)){
+                            testo = 0;
+                        }
                         testo++;
                         arraySquares[arrayPosition[i]-1].textContent = `${testo}`
                     }
@@ -205,14 +260,9 @@ function play(){
             }
         }
     }
-
-    function removeText(){
-        const arraySquares = document.querySelectorAll('.square');
-        for(let i = 0; i < arraySquares.length; i++){
-            const testo = parseInt(arraySquares[i].textContent);
-            if (testo == 0){
-                arraySquares[i].textContent = '';
-            }
-        }
+    
+    function addFlag(cell){
+        cell.style.backgroundColor = 'red'
     }
 }
+

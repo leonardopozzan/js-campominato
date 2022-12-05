@@ -39,11 +39,12 @@ header{
     font-weight: bold;
     font-size: 18px;
     color: grey;
+    cursor: pointer;
 }
 /******************** debug ***********************************/
-/* .bomb{
+.bomb{
     background-color: red;
-} */
+}
 /******************** debug ***********************************/
 
 .show{
