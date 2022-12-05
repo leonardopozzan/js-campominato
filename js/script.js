@@ -114,43 +114,35 @@ function play(){
                 setTimeout(()=>{
                     if(!isLeft && currentPosition > columns) {
                         const newPosition = currentPosition - columns -1;
-                        const newCell = document.getElementById(newPosition);
-                        click(newCell);
+                        click(arraySquares[newPosition - 1]);
                     }
                     if(currentPosition > columns){
                         const newPosition = currentPosition - columns;
-                        const newCell = document.getElementById(newPosition);
-                        click(newCell);
+                        click(arraySquares[newPosition - 1]);
                     }
                     if(!isRight && currentPosition > columns){
                         const newPosition = currentPosition - columns + 1;
-                        const newCell = document.getElementById(newPosition);
-                        click(newCell);
+                        click(arraySquares[newPosition - 1]);
                     }
                     if(!isLeft && currentPosition > 0){
                         const newPosition = currentPosition - 1;
-                        const newCell = document.getElementById(newPosition);
-                        click(newCell);
+                        click(arraySquares[newPosition - 1]);
                     }
                     if(!isRight && currentPosition > 0){
                         const newPosition = currentPosition + 1;
-                        const newCell = document.getElementById(newPosition);
-                        click(newCell);
+                        click(arraySquares[newPosition - 1]);
                     }
                     if(!isLeft && currentPosition < (numCell - columns)) {
                         const newPosition = currentPosition + columns -1;
-                        const newCell = document.getElementById(newPosition);
-                        click(newCell);
+                        click(arraySquares[newPosition - 1]);
                     }
                     if(currentPosition < (numCell - columns)){
                         const newPosition = currentPosition + columns;
-                        const newCell = document.getElementById(newPosition);
-                        click(newCell);
+                        click(arraySquares[newPosition - 1]);
                     }
                     if(!isRight && currentPosition < (numCell - columns)){
                         const newPosition = currentPosition + columns + 1;
-                        const newCell = document.getElementById(newPosition);
-                        click(newCell);
+                        click(arraySquares[newPosition - 1]);
                     }
                 },10);
                 //esecuzione vecchia, versione 1
