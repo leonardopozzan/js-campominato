@@ -33,12 +33,12 @@ header{
 .square{
     border: 5px outset lightgrey;
     background-color: grey;
+    color: transparent;
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: bold;
     font-size: 18px;
-    color: grey;
     cursor: pointer;
 }
 /******************** debug ***********************************/
@@ -63,6 +63,14 @@ header{
     background-color: rgb(240, 240, 13);
     background-image: url('../img/circle-radiation-solid.svg');
     background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.flag{
+    border: 5px outset lightgrey;
+    background-color: grey;
+    background-image: url('../img/flag-solid.svg');
+    background-size: 60% 60%;
     background-repeat: no-repeat;
     background-position: center;
 }

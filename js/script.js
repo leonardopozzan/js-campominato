@@ -20,6 +20,7 @@ function play(){
     const difficulty = document.querySelector('#difficulty').value;
     const result = document.querySelector('.result');
     result.innerHTML = '';
+    let isGameOver = false;
 
 
     //scelgo il numero di celle 
@@ -45,7 +46,6 @@ function play(){
             listOfBombs.push(random);
         }
     }
-    console.log(listOfBombs)
     //contatore dei click
     let privateCounter = 0;
     //conto delle righe
@@ -79,18 +79,21 @@ function play(){
         cell.addEventListener('click', function(e){
             click(cell);
         });
-        // cell.oncontextmenu = function(e){
-        //     e.preventDefault();
-        //     addFlag(cell);
-        // }
+        cell.oncontextmenu = function(e){
+            e.preventDefault();
+            addFlag(cell);
+        }
     }
     
     function click(cell)
         {   
+            if(isGameOver) return;
+            if(cell.classList.contains('flag')) return;
             if(cell.classList.contains('checked')) return;
             if(cell.classList.contains('show')) return;
             const currentPosition = parseInt(cell.id);
             if (listOfBombs.includes(currentPosition)){
+                console.log(cell);
                 gameOver(0);
             }else{
                 //al click rendo la cella cliccata 
@@ -187,21 +190,30 @@ function play(){
         }
     function gameOver(vinto)
     {   
+        isGameOver = true;
         //prendo e pulisco il campo dei risultati
         result.innerHTML = ''
-        //aggiungo ad ogni elemento bomba la classe che colora di rosso al background
-        for (let i = 0; i < arraySquares.length; i++){
-            if(arraySquares[i].classList.contains('bomb')){
-                arraySquares[i].classList.add('bomb-exploded');
-            }else{
-                arraySquares[i].classList.add('show');
-            }
-        }
 
         //printo il messaggio di vittoria o sconfitta
         if (vinto){
+            //aggiungo ad ogni elemento bomba la classe che mette la flag mostro le altre caselle non cliccate
+            for (let i = 0; i < arraySquares.length; i++){
+                if(arraySquares[i].classList.contains('bomb')){
+                    arraySquares[i].classList.add('flag');
+                }else{
+                    arraySquares[i].classList.add('show');
+                }
+            }
             result.innerHTML = `Hai Vinto!`
         }else{
+            //aggiungo ad ogni elemento bomba la classe che la evidenzi e mostro le altre caselle non cliccate
+            for (let i = 0; i < arraySquares.length; i++){
+                if(arraySquares[i].classList.contains('bomb')){
+                    arraySquares[i].classList.add('bomb-exploded');
+                }else{
+                    arraySquares[i].classList.add('show');
+                }
+            }
             result.innerHTML = `Hai Perso!`
         }
     }
@@ -344,9 +356,18 @@ function play(){
             // }
         }
     }
-    
+    let counterFlag = 0;
     function addFlag(cell){
-        cell.style.backgroundColor = 'red'
+        if(isGameOver) return;
+        if(cell.classList.contains('flag')){
+            counterFlag--;
+            cell.classList.remove('flag');
+            return;
+        }
+        if(counterFlag >= COUNT_BOMBS) return;
+        if(cell.classList.contains('checked')) return;
+        counterFlag++;
+        cell.classList.add('flag');
     }
 }
 
