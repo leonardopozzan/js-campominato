@@ -39,14 +39,14 @@ function play(){
 
     //genero la lista delle posizioni delle bombe
     let listOfBombs = [];
-    const COUNT_BOMBS = 10;
+    const COUNT_BOMBS = 16;
     while(listOfBombs.length < COUNT_BOMBS){
         const random = Math.floor(Math.random() * numCell) + 1;
         if(!listOfBombs.includes(random)){
             listOfBombs.push(random);
         }
     }
-    console.log(listOfBombs);
+    console.log('posizioni bombe',listOfBombs);
     //contatore dei click
     let privateCounter = 0;
     //conto delle righe
@@ -194,7 +194,6 @@ function play(){
         isGameOver = true;
         //prendo e pulisco il campo dei risultati
         result.innerHTML = ''
-
         //printo il messaggio di vittoria o sconfitta
         if (vinto){
             //aggiungo ad ogni elemento bomba la classe che mette la flag mostro le altre caselle non cliccate
@@ -223,7 +222,6 @@ function play(){
 
         for(let j = 0; j < listOfBombs.length; j++){
             const currentPosition = listOfBombs[j];
-
             const isRight = (currentPosition % columns === 0);
             const isLeft = (currentPosition % columns === 1);
             //in base alla posizione della cella imposto le condizioni da rispettare per andare a controllare una cella vicina
