@@ -39,13 +39,14 @@ function play(){
 
     //genero la lista delle posizioni delle bombe
     let listOfBombs = [];
-    const COUNT_BOMBS = 8;
+    const COUNT_BOMBS = 10;
     while(listOfBombs.length < COUNT_BOMBS){
         const random = Math.floor(Math.random() * numCell) + 1;
         if(!listOfBombs.includes(random)){
             listOfBombs.push(random);
         }
     }
+    console.log(listOfBombs);
     //contatore dei click
     let privateCounter = 0;
     //conto delle righe
@@ -135,15 +136,15 @@ function play(){
                         const newPosition = currentPosition + 1;
                         click(arraySquares[newPosition - 1]);
                     }
-                    if(!isLeft && currentPosition < (numCell - columns)) {
+                    if(!isLeft && currentPosition <= (numCell - columns)) {
                         const newPosition = currentPosition + columns -1;
                         click(arraySquares[newPosition - 1]);
                     }
-                    if(currentPosition < (numCell - columns)){
+                    if(currentPosition <= (numCell - columns)){
                         const newPosition = currentPosition + columns;
                         click(arraySquares[newPosition - 1]);
                     }
-                    if(!isRight && currentPosition < (numCell - columns)){
+                    if(!isRight && currentPosition <= (numCell - columns)){
                         const newPosition = currentPosition + columns + 1;
                         click(arraySquares[newPosition - 1]);
                     }
@@ -282,7 +283,7 @@ function play(){
                     arraySquares[newPosition - 1].textContent = counterBombs;
                 }
             }
-            if(!isLeft && currentPosition < (numCell - columns)) {
+            if(!isLeft && currentPosition <= (numCell - columns)) {
                 const newPosition = currentPosition + columns -1;
                 if(!listOfBombs.includes(newPosition)){
                     let counterBombs = parseInt(arraySquares[newPosition - 1].textContent);
@@ -293,7 +294,7 @@ function play(){
                     arraySquares[newPosition - 1].textContent = counterBombs;
                 }
             }
-            if(currentPosition < (numCell - columns)){
+            if(currentPosition <= (numCell - columns)){
                 const newPosition = currentPosition + columns;
                 if(!listOfBombs.includes(newPosition)){
                     let counterBombs = parseInt(arraySquares[newPosition - 1].textContent);
@@ -304,7 +305,7 @@ function play(){
                     arraySquares[newPosition - 1].textContent = counterBombs;
                 }
             }
-            if(!isRight && currentPosition < (numCell - columns)){
+            if(!isRight && currentPosition <= (numCell - columns)){
                 const newPosition = currentPosition + columns + 1;
                 if(!listOfBombs.includes(newPosition)){
                     let counterBombs = parseInt(arraySquares[newPosition - 1].textContent);
